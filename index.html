@@ -326,7 +326,7 @@
             <button onclick="closeMyOrdersModal()" class="absolute right-4 top-4 text-neutral-500 hover:text-neutral-950"><i class="fa-solid fa-xmark"></i></button>
             
             <h3 class="font-luxury text-xl font-bold text-neutral-900 mb-1">My Orders</h3>
-            <p class="text-[11px] text-neutral-400 mb-6">Apnar buy kora purno apparel styles details ekhane dekhun.</p>
+            <p class="text-[11px] text-neutral-400 mb-6">All your past orders placed while logged in are shown below.</p>
 
             <div id="ordersLoader" class="hidden text-center py-6">
                 <i class="fa-solid fa-spinner fa-spin text-amber-600"></i>
@@ -513,10 +513,10 @@
             `).join(''));
         }
 
-        // Fetch user personal past orders (PIN less security)
+        // Fetch user personal past orders
         window.openMyOrdersModal = async function() {
             if (!currentUser) {
-                showToast("Doyakoron login korun", "info");
+                showToast("Please log in to view your orders.", "info");
                 return;
             }
 
@@ -543,7 +543,7 @@
                 loader.classList.add('hidden');
 
                 if (userOrders.length === 0) {
-                    historyList.innerHTML = `<p class="text-xs text-neutral-400 text-center py-6">Apni ekhono kono order korenni.</p>`;
+                    historyList.innerHTML = `<p class="text-xs text-neutral-400 text-center py-6">You have not placed any orders yet. Add items to your bag and check out!</p>`;
                     return;
                 }
 
@@ -878,14 +878,8 @@
             window.open(`https://api.whatsapp.com/send?phone=94771234567&text=${encodeURIComponent(text)}`, '_blank');
         };
 
-        window.openMyOrdersModal = function() {
-            if (!currentUser) {
-                showToast("Please Login first", "info");
-                return;
-            }
-            document.getElementById('myOrdersModal').classList.remove('hidden');
-            openMyOrdersModal();
-        };
+        // NOTE: openMyOrdersModal is already defined above as the full async function.
+        // The duplicate wrapper was removed — it caused an infinite loop by calling itself.
 
         window.closeMyOrdersModal = function() {
             document.getElementById('myOrdersModal').classList.add('hidden');
@@ -907,7 +901,8 @@
             }, 3000);
         }
 
-        initializePlatform();
+        // Platform initialised — Firebase listeners and auth state are set up above.
+        // No additional init needed; onSnapshot and onAuthStateChanged start automatically.
     </script>
 </body>
 </html>
